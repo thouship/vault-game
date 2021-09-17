@@ -1,0 +1,317 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title></title>
+		<style>
+		 body
+		{
+			
+			width: 50%%;
+			border: 10px solid  #CD5C5C;
+			padding: 10px;	  
+			text-align: center;
+			border-radius:20px;
+			box-shadow:0 0 15px 4px #AAF;
+			margin:auto;
+			width: 50%;
+			background-color:#F3E0BE;
+			transition:all .5s;
+			
+			
+		}
+		
+		body:hover
+		{
+		background-color:#F3E0BE;   
+		}
+
+		body:active
+		{
+		background-color:#F7CAC9 ;
+		}
+		
+		button:hover
+		{
+			background-color:lightblue;
+		}
+		
+		button:active
+		{
+			background-color:coral;
+		}
+		
+		body:active
+		{
+			opacity: 0.75;
+			filter: alpha(opacity=75);
+		}
+		
+		div
+		{
+			margin: 0 auto;
+			width: 100px;
+		}
+		
+		h1
+		{
+			margin: 0 auto;
+			width: 100px;
+			text-decoration: underline;
+		}
+		
+		img	
+		{
+			height: 200px;
+			width: 90%;
+			margin: auto;
+			/*position:relative; 
+			left:30px;
+			*/
+		}
+		
+		table 
+		{
+				border: thick solid #AAF;
+				border-collapse: collapse;
+				width: 25%;
+		}
+		
+		th, td
+		{
+				border: thin solid #AAF;
+				padding: 8px;
+				width: 50%;
+				position:relative; 
+				right:20px;
+		}
+		
+		.input,.title
+		{
+		position:relative; 
+		right:40px;
+		}
+
+		.tableGuess
+		{
+		position:relative; 
+		left:10px;
+		}
+		
+		</style>
+		<script>
+		
+			function initialize()
+			{
+				clue="";
+				time=7;
+				displayguess=0;
+				hundreds=0;
+				tens=0;
+				ones=0;
+				guess=0;
+			
+				
+			hintpassword=document.getElementById("");
+			gameoverx= document.getElementById("gameOver");
+			logOutput=document.getElementById("log");
+			timer.innerHTML=time;
+			gHundreds=Math.floor(Math.random() * 9) + 1; 
+			gTens=Math.floor(Math.random() * 9) + 1  ;
+			gOnes=Math.floor(Math.random() * 9) + 1  ;
+			password=(gHundreds*100)+(gTens*10)+(gOnes*1);
+			extraX=document.getElementById("extraPrint");
+			logout=document.getElementById("log");
+			guesstable=document.getElementById("tableOfGuesses");
+			i=-1;
+			}
+			
+			function enter(num)
+			{
+				if (hundreds==0)
+				{
+					hundreds=num;
+				}
+					else if (tens==0)
+					{
+						tens=num;
+					}
+						else if (ones==0)
+						{
+							ones=num;
+						
+						}		
+				displayguess=(hundreds*100)+(tens*10)+(ones*1);
+				display ();
+				
+				if (ones>0)
+				{
+					guess=(hundreds*100)+(tens*10)+(ones*1);
+					submit();
+					
+				}
+			}
+				
+			
+			function submit()
+			{
+				i++;
+				logfunc ();
+				if (guess==password)
+					{
+					displayguess="UNLOCKED";
+					display ();
+					gameoverx.innerHTML="";
+					imageOpen ();
+					}
+				else if (guess!=password)
+					{
+					extraX.innerHTML="";
+					extra ();
+					hint ();
+					Clear ();
+					time= time-1;
+					if (time<=0)
+						{
+							time=0;
+							gameoverx.innerHTML="";
+							displayguess="BUSTED";
+							imageBusted ();
+							display ();
+						}
+					timer.innerHTML=time;
+					}
+			
+			}
+			
+			function display()
+			{
+				input.value=displayguess;
+				logOutput.innerHTML=clue;
+			}
+			
+			function Clear()
+			{
+			hundreds=0;
+			tens=0;
+			ones=0;
+			guess=0;
+			displayguess=0;
+			display();
+			}
+			
+
+			
+			function hint()
+			{
+			if (guess>password)
+				{
+					clue="Smaller";
+				}
+				else if (guess<password)
+				{
+					clue="Bigger";
+				}
+				display ();
+			}
+			
+			function extra()
+			{
+				var chance= Math.floor(Math.random() *6) + 1  ;
+				var trafficjam=Math.floor(Math.random() *3) + 1;
+				var	notrafficjam= Math.floor(Math.random() *3) + 3;	
+				if (chance==trafficjam)
+					{
+					time= time+2;
+					extraX.innerHTML= "Traffic Jam +2 Seconds";
+					}
+				if (chance==notrafficjam)
+					{
+					time=time-1
+					extraX.innerHTML= "Clear Road -1 Seconds";
+					}
+			}
+		
+		
+			function imageOpen()
+			{
+			document.getElementById("imageX").src= "money.png";
+			
+			}
+			
+			
+			function imageBusted()
+			{
+			document.getElementById("imageX").src= "gameover.png";
+			}
+			
+			
+			function logfunc ()
+			{	
+					var newRow= guesstable.insertRow ();
+					var newCell= newRow.insertCell ();
+					newCell.innerHTML= "Guess " + ( i+1);
+					newCell=newRow.insertCell();
+					newCell.innerHTML=guess;
+			
+			}
+
+
+			function displayPassword()
+			{
+				var newRow= guesstable.insertRow ();
+				var newCell= newRow.insertCell ();
+				newCell.innerHTML= "Password ";
+				newCell=newRow.insertCell();
+				newCell.innerHTML=password;
+
+			}
+		</script>
+	</head>
+		
+	<body onload = "initialize();">
+		
+		<h1 class="title">Codebreaker</h1>
+		<div >
+		-Timer:<span id= "timer"> </span></Br> 
+		<div id="extraPrint"></div>
+		-Password: <input class="input" id="input" type= "text" />
+		<table id="gameOver">
+			<tr>
+				<td><button onclick= "enter(1);">1</button></td>
+				<td><button onclick= "enter(2);">2</button></td>
+				<td><button onclick= "enter(3);">3</button></td>
+			</tr>
+			<tr>
+				<td><button onclick= "enter(4);">4</button></td>
+				<td><button onclick= "enter(5);">5</button></td>
+				<td><button onclick= "enter(6);">6</button></td>
+			</tr>
+			<tr>
+				<td><button onclick= "enter(7);">7</button></td>
+				<td><button onclick= "enter(8);">8</button></td>
+				<td><button onclick= "enter(9);">9</button></td>
+			</tr>
+
+			
+		</table>
+		<button class="centerButton" onclick="Clear();" >Clear</button>
+		<button class="centerButton" onClick="window.location.reload();">Play Again</button>
+		<button class="centerButton" onClick="displayPassword();">Password</button>
+		</br>
+		</br>
+		<img class="" id="imageX" src= "vault.png">
+		
+		-Hint:
+		<span id="log"></span>
+		</br>
+		</span id="tableDiv"> LOG
+		<table class="tableGuess" id= "tableOfGuesses">
+		</span>
+
+	    </div>
+
+	
+	</body>
+	
+
+</html>
